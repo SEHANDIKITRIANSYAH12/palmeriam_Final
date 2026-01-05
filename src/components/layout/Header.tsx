@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import logoSiipalmi from "@/assets/logo-siipalmi.png";
 
 const navigation = [
   { name: "Beranda", href: "/" },
@@ -32,9 +27,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-heading font-bold text-xl">S</span>
-            </div>
+            <img 
+              src={logoSiipalmi} 
+              alt="Logo SIIPALMI" 
+              className="h-14 w-auto"
+            />
             <div className="hidden sm:block">
               <p className="font-heading font-semibold text-foreground text-lg leading-tight">
                 SIIPALMI

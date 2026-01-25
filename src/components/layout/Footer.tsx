@@ -1,5 +1,7 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import lambangKotaJakartaTimur from "../../assets/Lambang_Kota_Jakarta_Timur.png";
 
 export default function Footer() {
   return (
@@ -10,11 +12,15 @@ export default function Footer() {
           {/* About */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
-                <span className="text-accent-foreground font-heading font-bold">S</span>
-              </div>
+                <Image
+                  src={lambangKotaJakartaTimur}
+                  alt="Lambang Kota Jakarta Timur"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-lg bg-primary-foreground/10 p-1 object-contain"
+                />
               <div>
-                <p className="font-heading font-semibold text-lg">SIIPALMI</p>
+                <p className="font-heading font-semibold text-lg">SIPALMI</p>
               </div>
             </div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mb-4">
@@ -57,7 +63,7 @@ export default function Footer() {
               ].map((link) => (
                 <li key={link.name}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-primary-foreground/80 hover:text-accent text-sm transition-colors"
                   >
                     {link.name}

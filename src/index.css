@@ -5,6 +5,16 @@
 @tailwind utilities;
 
 @layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+  
+  body {
+    @apply font-sans;
+  }
+}
+
+@layer base {
   :root {
     /* Government Navy Blue Palette */
     --background: 210 25% 98%;
@@ -301,6 +311,20 @@
     to { 
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+
+  .animate-clock-pan {
+    animation: clockMarquee 10s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes clockMarquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
     }
   }
 

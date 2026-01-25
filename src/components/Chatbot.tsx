@@ -28,22 +28,43 @@ const botResponses: Record<string, string> = {
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "Selamat datang di SIIPALMI! 👋\n\nSaya asisten virtual Kelurahan Palmeriam. Silakan tanyakan tentang layanan kami atau pilih pertanyaan di bawah.",
-      isBot: true,
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const storedMessages = localStorage.getItem("chatMessages");
+      if (storedMessages) {
+        // Need to convert string timestamps back to Date objects
+        return JSON.parse(storedMessages).map((msg: Message) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to parse messages from localStorage", error);
+    }
+    return [
+      {
+        id: 1,
+        text: "Selamat datang di SIPALMI! 👋\n\nSaya asisten virtual Kelurahan Palmeriam. Silakan tanyakan tentang layanan kami atau pilih pertanyaan di bawah.",
+        isBot: true,
+        timestamp: new Date(),
+      },
+    ];
+  });
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Scroll to bottom
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+    // Save messages to localStorage
+    try {
+      localStorage.setItem("chatMessages", JSON.stringify(messages));
+    } catch (error) {
+      console.error("Failed to save messages to localStorage", error);
     }
   }, [messages]);
 
@@ -115,15 +136,17 @@ export default function Chatbot() {
       {/* Chat Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full shadow-gold transition-all duration-300 ${
-          isOpen ? "bg-destructive hover:bg-destructive/90" : "bg-accent hover:bg-accent/90"
+        className={`fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ${
+          isOpen 
+            ? "bg-destructive hover:bg-destructive/90" 
+            : "bg-gradient-to-r from-accent via-accent/90 to-accent hover:from-accent/90 hover:to-accent text-white"
         }`}
         aria-label={isOpen ? "Tutup chat" : "Buka chat bantuan"}
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-accent-foreground" />
+          <X className="w-6 h-6 text-white" />
         ) : (
-          <MessageCircle className="w-6 h-6 text-accent-foreground" />
+          <MessageCircle className="w-6 h-6 text-white" />
         )}
       </Button>
 
@@ -132,11 +155,11 @@ export default function Chatbot() {
         <div className="fixed bottom-20 right-4 z-50 w-[350px] sm:w-[400px] h-[500px] bg-card rounded-2xl shadow-government-lg border border-border flex flex-col animate-slide-up overflow-hidden">
           {/* Header */}
           <div className="bg-primary px-4 py-3 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-              <Bot className="w-5 h-5 text-accent-foreground" />
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+              <Bot className="w-5 h-5 text-secondary-foreground" />
             </div>
             <div>
-              <h3 className="font-semibold text-primary-foreground">Asisten SIIPALMI</h3>
+              <h3 className="font-semibold text-primary-foreground">Asisten SIPALMI</h3>
               <p className="text-xs text-primary-foreground/70">Online • Siap membantu</p>
             </div>
           </div>
@@ -151,20 +174,20 @@ export default function Chatbot() {
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                      message.isBot ? "bg-primary" : "bg-accent"
+                      message.isBot ? "bg-primary" : "bg-secondary"
                     }`}
                   >
                     {message.isBot ? (
                       <Bot className="w-4 h-4 text-primary-foreground" />
                     ) : (
-                      <User className="w-4 h-4 text-accent-foreground" />
+                      <User className="w-4 h-4 text-secondary-foreground" />
                     )}
                   </div>
                   <div
                     className={`max-w-[75%] rounded-2xl px-4 py-2 ${
                       message.isBot
-                        ? "bg-secondary text-secondary-foreground rounded-tl-sm"
-                        : "bg-primary text-primary-foreground rounded-tr-sm"
+                        ? "bg-secondary text-secondary-foreground rounded-tl-none"
+                        : "bg-blue-100 text-blue-900 rounded-tr-none"
                     }`}
                   >
                     <p className="text-sm whitespace-pre-line">{message.text}</p>
@@ -195,7 +218,7 @@ export default function Chatbot() {
                 <button
                   key={reply}
                   onClick={() => sendMessage(reply)}
-                  className="px-3 py-1.5 bg-secondary text-secondary-foreground text-xs font-medium rounded-full whitespace-nowrap hover:bg-secondary/80 transition-colors"
+                  className="px-4 py-2 border border-blue-300 bg-blue-50 text-blue-800 text-sm font-medium rounded-full whitespace-nowrap hover:bg-blue-100 transition-colors"
                 >
                   {reply}
                 </button>
@@ -204,7 +227,7 @@ export default function Chatbot() {
           </div>
 
           {/* Input */}
-          <form onSubmit={handleSubmit} className="p-3 border-t border-border">
+          <form onSubmit={handleSubmit} className="p-3 border-t border-border bg-background/95 backdrop-blur-sm shadow-sm">
             <div className="flex gap-2">
               <Input
                 ref={inputRef}
@@ -214,7 +237,12 @@ export default function Chatbot() {
                 className="flex-1"
                 aria-label="Pesan"
               />
-              <Button type="submit" size="icon" disabled={!inputValue.trim()}>
+              <Button 
+                type="submit" 
+                size="icon" 
+                disabled={!inputValue.trim()} 
+                className="bg-gradient-to-r from-accent via-accent/90 to-accent hover:from-accent/90 hover:to-accent text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <Send className="w-4 h-4" />
               </Button>
             </div>

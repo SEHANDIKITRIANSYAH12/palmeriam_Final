@@ -8,7 +8,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import { 
-  MessageSquare, Send, CheckCircle2, AlertCircle, Phone, Mail, MapPin, Clock, Download, QrCode, Copy, Search, FileClock, ThumbsUp, Wrench
+  MessageSquare, Send, CheckCircle2, AlertCircle, Phone, Mail, MapPin, Clock, Download, QrCode, Copy, Search, ThumbsUp, Wrench
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -378,7 +378,7 @@ export default function PengaduanPage() {
                 </Button>
                 {showQR && (
                   <p className="text-xs text-muted-foreground mt-3">
-                    Tips: Klik kanan QR Code lalu pilih "Save Image" untuk menyimpan.
+                    Tips: Klik kanan QR Code lalu pilih &quot;Save Image&quot; untuk menyimpan.
                   </p>
                 )}
               </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +52,14 @@ export default function BeritaDetailAdminPage({ params }: { params: Promise<{ id
         </CardHeader>
         {b.gambar && (
           <div className="px-6 pb-4">
-            <img src={b.gambar} alt={b.judul} className="w-full h-auto rounded-lg" />
+            <Image
+              src={b.gambar}
+              alt={b.judul}
+              width={1200}
+              height={800}
+              unoptimized
+              className="w-full h-auto rounded-lg"
+            />
           </div>
         )}
         <CardContent>

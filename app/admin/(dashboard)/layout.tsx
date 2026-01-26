@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { LayoutDashboard, MessageSquare, Newspaper, Calendar, Settings, LogOut, Home, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -45,11 +46,13 @@ export default function AdminDashboardLayout({
           {/* Logo Section */}
           <div className="flex items-center justify-center h-20 px-6 border-b border-slate-200/80 bg-gradient-to-r from-primary/5 to-primary/10">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
-                <img 
-                  src={lambangJakartaTimur.src || lambangJakartaTimur} 
+              <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden relative">
+                <Image
+                  src={lambangJakartaTimur}
                   alt="Lambang Kota Jakarta Timur"
-                  className="w-full h-full object-contain p-1"
+                  fill
+                  sizes="48px"
+                  className="object-contain p-1"
                 />
               </div>
               <div>

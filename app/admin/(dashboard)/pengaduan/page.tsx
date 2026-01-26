@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Filter, Download, MoreHorizontal, MessageSquare, AlertCircle, ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import { Search, Filter, Download, MoreHorizontal, MessageSquare, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

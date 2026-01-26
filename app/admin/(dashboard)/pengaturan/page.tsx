@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { 
-  Settings, User, Lock, UserPlus, Trash2, Save, Eye, EyeOff, AlertCircle, Users
+  Settings, User, Lock, UserPlus, Trash2, Save, Eye, EyeOff, Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,6 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authFetch } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 // Profile update schema
 const profileSchema = z.object({

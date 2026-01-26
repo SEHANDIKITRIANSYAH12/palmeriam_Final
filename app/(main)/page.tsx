@@ -4,7 +4,6 @@ import Link from "next/link";
 import { 
   FileText, 
   Users, 
-  Calendar, 
   MessageSquare, 
   ArrowRight, 
   CheckCircle2, 
@@ -20,7 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import heroImage from "../../src/assets/hero-kelurahan.jpg";
+import heroImage from "../../src/assets/palmeriamhero.jpg";
 import Map from "@/components/Map";
 
 // Team members data

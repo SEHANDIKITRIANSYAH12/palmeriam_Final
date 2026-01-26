@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,16 @@ const botResponses: Record<string, string> = {
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window === "undefined") {
+      return [
+        {
+          id: 1,
+          text: "Selamat datang di SIPALMI! 👋\n\nSaya asisten virtual Kelurahan Palmeriam. Silakan tanyakan tentang layanan kami atau pilih pertanyaan di bawah.",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ];
+    }
     try {
       const storedMessages = localStorage.getItem("chatMessages");
       if (storedMessages) {

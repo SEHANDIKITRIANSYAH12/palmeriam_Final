@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { 
   FileText, 
   Users, 
@@ -17,8 +17,17 @@ import {
   MapPin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-kelurahan.jpg";
+import Image, { StaticImageData } from "next/image";
+import heroImage from "@/assets/palmeriamhero.jpg";
 import Map from "@/components/Map";
+
+// Type definition for team member
+interface TeamMember {
+  name: string;
+  role: string;
+  description: string;
+  image?: string;
+}
 
 // Team members data
 const teamMembers = [
@@ -83,10 +92,12 @@ export default function HomePage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
+          <Image
             src={heroImage}
             alt="Kantor Kelurahan Palmeriam"
-            className="w-full h-full object-cover object-center"
+            fill
+            className="object-cover object-center"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/40" />
         </div>
@@ -114,7 +125,7 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row gap-3 animate-slide-up opacity-0 stagger-4">
               <Button size="lg" className="btn-gold text-sm h-11" asChild>
-                <Link to="/layanan" className="flex items-center">
+                <Link href="/layanan" className="flex items-center">
                   Lihat Layanan
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
@@ -124,7 +135,7 @@ export default function HomePage() {
                 className="h-11 bg-gradient-to-r from-accent via-accent/90 to-accent hover:from-accent/90 hover:to-accent text-white shadow-lg hover:shadow-xl transition-all text-sm"
                 asChild
               >
-                <Link to="/pengaduan" className="flex items-center">
+                <Link href="/pengaduan" className="flex items-center">
                   Ajukan Pengaduan
                 </Link>
               </Button>
@@ -260,7 +271,7 @@ export default function HomePage() {
                     {service.description}
                   </p>
                   <Link 
-                    to="/layanan" 
+                    href="/layanan" 
                     className="inline-flex items-center text-sm font-medium text-primary hover:text-primary-light transition-colors"
                   >
                     Selengkapnya
@@ -273,7 +284,7 @@ export default function HomePage() {
 
           <div className="text-center mt-10">
             <Button size="lg" asChild>
-              <Link to="/layanan">
+              <Link href="/layanan">
                 Lihat Semua Layanan
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
@@ -417,7 +428,7 @@ export default function HomePage() {
               className="bg-gradient-to-r from-accent via-accent/90 to-accent hover:from-accent/90 hover:to-accent text-white shadow-lg hover:shadow-xl transition-all whitespace-nowrap" 
               asChild
             >
-              <Link to="/pengaduan">
+              <Link href="/pengaduan">
                 <MessageSquare className="w-5 h-5 mr-2" />
                 Ajukan Pengaduan
               </Link>

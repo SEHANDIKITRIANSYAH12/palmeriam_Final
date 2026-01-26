@@ -31,5 +31,15 @@
     "strictNullChecks": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "server/**",
+    "src/legacy_pages/**",
+    "src/App.tsx",
+    "src/main.tsx",
+    "src/layouts/**",
+    "src/components/NavLink.tsx",
+    "src/components/GlobalSearch.tsx",
+    "src/components/auth/**"
+  ]
 }

@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  name      String
-  role      String   @default("admin")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  berita    Berita[]
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  password      String
+  name          String
+  role          String         @default("admin")
+  chatSessions  ChatSession[]  @relation("AdminChatSessions")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  berita        Berita[]
 }
 
 model Pengaduan {
@@ -62,4 +63,31 @@ model Agenda {
   peserta       Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model ChatSession {
+  id            String        @id @default(cuid())
+  namaLengkap   String
+  noHp          String
+  status        String        @default("Aktif") // Aktif, Selesai, Diambil Alih
+  diambilAlih   Boolean       @default(false)
+  adminId       Int?          // ID admin yang mengambil alih (jika ada)
+  admin         User?         @relation("AdminChatSessions", fields: [adminId], references: [id])
+  pesan         ChatMessage[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([adminId])
+}
+
+model ChatMessage {
+  id            Int           @id @default(autoincrement())
+  sessionId     String
+  session       ChatSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  isFromUser    Boolean
+  isFromAdmin   Boolean       @default(false)
+  content       String
+  timestamp     DateTime      @default(now())
+
+  @@index([sessionId])
 }

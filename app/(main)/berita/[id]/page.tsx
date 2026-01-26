@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { Calendar, User, Tag, ChevronLeft, Clock } from 'lucide-react';
@@ -100,11 +101,14 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           <Card className="overflow-hidden">
             {/* Image */}
             {article.gambar && (
-              <div className="w-full h-[400px] md:h-[500px] overflow-hidden bg-muted">
-                <img 
-                  src={article.gambar} 
+              <div className="w-full h-[400px] md:h-[500px] overflow-hidden bg-muted relative">
+                <Image
+                  src={article.gambar}
                   alt={article.judul}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="100vw"
+                  unoptimized
+                  className="object-cover"
                 />
               </div>
             )}

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -227,8 +228,15 @@ export default function BeritaFormPage({ params }: { params?: Promise<{ id?: str
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                 {previewUrl ? (
                   <div className="space-y-2">
-                    <div className="relative">
-                      <img src={previewUrl} alt="Preview" className="w-full h-48 object-cover rounded" />
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={previewUrl}
+                        alt="Preview"
+                        fill
+                        sizes="100vw"
+                        unoptimized
+                        className="object-cover rounded"
+                      />
                       <Button
                         type="button"
                         variant="destructive"
@@ -239,7 +247,7 @@ export default function BeritaFormPage({ params }: { params?: Promise<{ id?: str
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-sm text-gray-600">Klik "Ganti Gambar" untuk mengubah</p>
+                    <p className="text-sm text-gray-600">Klik &quot;Ganti Gambar&quot; untuk mengubah</p>
                   </div>
                 ) : (
                   <div className="text-center space-y-2">

@@ -2,26 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { 
-  FileText, 
-  Users, 
-  Calendar, 
-  MessageSquare, 
-  ArrowRight, 
-  CheckCircle2, 
-  Building2, 
-  Clock, 
-  Phone,
-  ChevronRight,
-  Award,
-  Heart,
-  Target,
-  Briefcase,
-  MapPin,
-  Bell,
-  Search
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Users, Calendar, ChevronRight, MapPin, Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -146,11 +128,14 @@ export default function BeritaPage() {
                   {/* Featured News */}
                   <Link href={`/berita/${featuredNews.id}`} className="card-government group block overflow-hidden">
                     <div className="md:flex">
-                      <div className="md:w-2/5 h-56 md:h-auto overflow-hidden">
-                        <img 
-                          src={featuredNews.gambar || "/placeholder.svg"} 
-                          alt={featuredNews.judul} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      <div className="md:w-2/5 h-56 md:h-auto overflow-hidden relative">
+                        <Image
+                          src={featuredNews.gambar || "/placeholder.svg"}
+                          alt={featuredNews.judul}
+                          fill
+                          priority
+                          sizes="(min-width: 768px) 40vw, 100vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="p-6 md:p-8 md:w-3/5 flex flex-col">
@@ -165,7 +150,7 @@ export default function BeritaPage() {
                         </p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-auto">
                           <Calendar className="w-4 h-4" />
-                          <span>{format(new Date(featuredNews.createdAt), 'd MMMM yyyy', { locale: id as any })}</span>
+                          <span>{format(new Date(featuredNews.createdAt), 'd MMMM yyyy', { locale: id })}</span>
                         </div>
                       </div>
                     </div>
@@ -175,12 +160,14 @@ export default function BeritaPage() {
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {otherNews.map((item) => (
                       <Link href={`/berita/${item.id}`} key={item.id} className="card-government group flex flex-col overflow-hidden">
-                        <div className="h-40 overflow-hidden">
-                           <img 
-                             src={item.gambar || "/placeholder.svg"} 
-                             alt={item.judul} 
-                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                           />
+                        <div className="h-40 overflow-hidden relative">
+                          <Image
+                            src={item.gambar || "/placeholder.svg"}
+                            alt={item.judul}
+                            fill
+                            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
                         <div className="p-4 flex flex-col flex-grow">
                            <Badge className={categoryColors[item.kategori] || 'bg-secondary'}>
@@ -192,7 +179,7 @@ export default function BeritaPage() {
                           <div className="flex items-center justify-between mt-auto pt-2">
                             <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5" />
-                              {format(new Date(item.createdAt), 'd MMM yyyy', { locale: id as any })}
+                              {format(new Date(item.createdAt), 'd MMM yyyy', { locale: id })}
                             </span>
                             <span className="text-sm text-primary font-medium flex items-center gap-1">
                               Baca
@@ -231,7 +218,7 @@ export default function BeritaPage() {
                           {format(new Date(item.tanggal), 'd')}
                         </div>
                         <div className="text-sm text-accent/90 group-hover:text-accent-light transition-colors duration-300">
-                          {format(new Date(item.tanggal), 'MMMM yyyy', { locale: id as any })}
+                          {format(new Date(item.tanggal), 'MMMM yyyy', { locale: id })}
                         </div>
                         <div className="text-xs text-accent/80 mt-1 group-hover:text-accent-light transition-colors duration-300">
                           {item.waktuMulai} - {item.waktuSelesai} WIB

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,13 +15,20 @@ import { useToast } from "@/hooks/use-toast";
 import { loginApi } from "@/lib/api";
 import { getAuth, setAuth } from "@/lib/auth";
 
-export default function LoginPage() {
+function LoginPageInner() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const existing = getAuth();
+    if (existing?.token) {
+      router.replace("/admin/dashboard");
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,13 +49,6 @@ export default function LoginPage() {
     }
   };
 
-  useEffect(() => {
-    const existing = getAuth();
-    if (existing?.token) {
-      router.replace("/admin/dashboard");
-    }
-  }, [router]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-md">
@@ -55,18 +56,18 @@ export default function LoginPage() {
           {/* Header dengan gradient */}
           <div className="bg-gradient-to-br from-primary via-primary/95 to-primary/90 p-6 text-center">
             <div className="flex flex-col items-center space-y-4">
-              <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg border-2 border-white/30">
-                <img
-                  src={lambangJakartaTimur.src || lambangJakartaTimur}
+              <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg border-2 border-white/30 relative">
+                <Image
+                  src={lambangJakartaTimur}
                   alt="Lambang Kota Jakarta Timur"
-                  className="h-16 w-16 object-contain"
+                  fill
+                  sizes="64px"
+                  className="object-contain"
                 />
               </div>
               <div className="space-y-2">
                 <h1 className="text-2xl font-bold text-white">Login Admin</h1>
-                <p className="text-sm text-white/90">
-                  Sistem Informasi Kelurahan Palmeriam
-                </p>
+                <p className="text-sm text-white/90">Sistem Informasi Kelurahan Palmeriam</p>
               </div>
             </div>
           </div>
@@ -119,8 +120,8 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg font-semibold"
                 disabled={isLoading}
               >
@@ -164,5 +165,13 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

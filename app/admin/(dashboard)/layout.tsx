@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LayoutDashboard, MessageSquare, Newspaper, Calendar, Settings, LogOut, Home, Bell, User } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Newspaper, Calendar, Settings, LogOut, Home, Bell, User, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { clearAuth, getAuth } from "@/lib/auth";
@@ -23,6 +23,7 @@ export default function AdminDashboardLayout({
     { name: 'Pengaduan', icon: MessageSquare, href: '/admin/pengaduan' },
     { name: 'Berita', icon: Newspaper, href: '/admin/berita' },
     { name: 'Agenda', icon: Calendar, href: '/admin/agenda' },
+    { name: 'Landing Page', icon: Globe, href: '/admin/landing-page' },
     { name: 'Pengaturan', icon: Settings, href: '/admin/pengaturan' },
   ];
 

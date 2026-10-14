@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   FileText, 
@@ -22,27 +23,55 @@ import Image from "next/image";
 import heroImage from "../../src/assets/palmeriamhero.jpg";
 import Map from "@/components/Map";
 
-// Team members data
-const teamMembers = [
+type OrganisasiMember = {
+  id: number;
+  nama: string;
+  jabatan: string;
+  deskripsi: string | null;
+  foto: string | null;
+  urutan: number;
+};
+
+type ProfilKelurahan = {
+  tentang: string;
+  visi: string;
+  misi: string;
+  poinPelayanan: string | null;
+};
+
+// Default fallback data
+const fallbackTeamMembers: OrganisasiMember[] = [
   { 
-    name: "Setiyawan, Spd, Msi", 
-    role: "Lurah", 
-    description: "Memimpin dan mengkoordinasikan seluruh kegiatan kelurahan"
+    id: 1,
+    nama: "Setiyawan, S.Pd., M.Si.", 
+    jabatan: "Lurah Palmeriam", 
+    deskripsi: "Memimpin dan mengkoordinasikan seluruh kegiatan pemerintahan dan pelayanan di kelurahan",
+    foto: null,
+    urutan: 1,
   },
   { 
-    name: "", 
-    role: "Sekretaris Kelurahan", 
-    description: "Mengelola administrasi dan tata usaha kelurahan"
+    id: 2,
+    nama: "Dra. Hj. Nurhayati, M.M.", 
+    jabatan: "Sekretaris Kelurahan", 
+    deskripsi: "Mengelola administrasi dan tata usaha kelurahan",
+    foto: null,
+    urutan: 2,
   },
   { 
-    name: "", 
-    role: "Kasi Pemerintahan", 
-    description: "Menangani urusan pemerintahan dan pelayanan umum"
+    id: 3,
+    nama: "Bambang Sudiro, S.Sos.", 
+    jabatan: "Kasi Pemerintahan", 
+    deskripsi: "Menangani urusan pemerintahan dan pelayanan umum",
+    foto: null,
+    urutan: 3,
   },
   { 
-    name: "", 
-    role: "Kasi Kesejahteraan", 
-    description: "Mengelola program kesejahteraan masyarakat"
+    id: 4,
+    nama: "Siti Rahmawati, S.E.", 
+    jabatan: "Kasi Kesejahteraan", 
+    deskripsi: "Mengelola program kesejahteraan masyarakat",
+    foto: null,
+    urutan: 4,
   },
 ];
 
@@ -79,6 +108,44 @@ const stats = [
 ];
 
 export default function HomePage() {
+  const [organisasiList, setOrganisasiList] = useState<OrganisasiMember[]>(fallbackTeamMembers);
+  const [profil, setProfil] = useState<ProfilKelurahan | null>(null);
+
+  useEffect(() => {
+    fetch("/api/organisasi")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setOrganisasiList(data);
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/profil")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.visi) {
+          setProfil(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const poinList = profil?.poinPelayanan
+    ? profil.poinPelayanan.split("\n").map((p) => p.trim()).filter(Boolean)
+    : [
+        "Pelayanan cepat dan transparan",
+        "Sistem pengaduan 24 jam",
+        "Akses informasi real-time",
+        "Ramah aksesibilitas",
+      ];
+
+  const misiText = profil?.misi || "Meningkatkan kualitas pelayanan publik berbasis teknologi";
+  const misiLines = misiText
+    .split("\n")
+    .map((p) => p.trim())
+    .filter(Boolean);
+
   return (
     <main id="main-content" className="pt-20">
       {/* Hero Section */}
@@ -170,67 +237,114 @@ export default function HomePage() {
       {/* About Section */}
       <section className="section-padding bg-background">
         <div className="container-government">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div>
-              <div className="accent-line mb-4" />
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-6">
-                Tentang Kelurahan Palmeriam
-              </h2>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
-                Kelurahan Palmeriam merupakan salah satu kelurahan di Kecamatan Matraman, 
-                Jakarta Timur. Kami berkomitmen untuk memberikan pelayanan terbaik kepada 
-                masyarakat dengan mengedepankan prinsip transparansi, akuntabilitas, dan 
-                profesionalisme.
-              </p>
-              <p className="text-muted-foreground mb-8 leading-relaxed">
-                Melalui platform SIPALMI, kami mempermudah akses masyarakat terhadap 
-                berbagai layanan administratif, informasi kegiatan, dan saluran pengaduan 
-                yang responsif.
-              </p>
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Kolom Kiri: Profil & Nilai Pelayanan */}
+            <div className="lg:col-span-6 space-y-6">
+              <div>
+                <div className="accent-line mb-4" />
+                <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                  Tentang Kelurahan Palmeriam
+                </h2>
+                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed whitespace-pre-line mb-4">
+                  {profil?.tentang ||
+                    "Kelurahan Palmeriam merupakan salah satu kelurahan di Kecamatan Matraman, Jakarta Timur. Kami berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat dengan mengedepankan prinsip transparansi, akuntabilitas, dan profesionalisme."}
+                </p>
+                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                  Melalui platform SIPALMI, kami mempermudah akses masyarakat terhadap 
+                  berbagai layanan administratif, informasi kegiatan, dan saluran pengaduan 
+                  yang responsif.
+                </p>
+              </div>
               
-              <div className="space-y-3">
-                {[
-                  "Pelayanan cepat dan transparan",
-                  "Sistem pengaduan 24 jam",
-                  "Akses informasi real-time",
-                  "Ramah aksesibilitas",
-                ].map((item, index) => (
+              {/* Checklist Keunggulan Pelayanan */}
+              <div className="space-y-3 pt-2">
+                {poinList.map((item, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-accent shrink-0" />
-                    <span className="text-foreground">{item}</span>
+                    <span className="text-foreground text-sm font-medium">{item}</span>
                   </div>
                 ))}
               </div>
+
+              {/* Nilai Budaya Pelayanan */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-border/60">
+                <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Users className="w-4 h-4 text-primary shrink-0" />
+                    <h4 className="font-heading font-semibold text-sm text-foreground">Partisipatif</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Mendorong partisipasi aktif masyarakat dalam pembangunan lingkungan
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-accent/10 border border-accent/20 transition-all hover:bg-accent/15">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Award className="w-4 h-4 text-accent shrink-0" />
+                    <h4 className="font-heading font-semibold text-sm text-foreground">Integritas</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Menjunjung tinggi kejujuran dan profesionalisme aparatur
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="card-government p-6 text-center">
-                <Target className="w-10 h-10 text-primary mx-auto mb-3" />
-                <h3 className="font-heading font-semibold text-foreground mb-2">Visi</h3>
-                <p className="text-sm text-muted-foreground">
-                  Mewujudkan Kelurahan Palmeriam yang modern, transparan, dan melayani
-                </p>
+            {/* Kolom Kanan: Card Visi & Misi yang Sepenuhnya Responsif Mengikuti Teks */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+              {/* Card Visi */}
+              <div className="card-government p-6 sm:p-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col h-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Target className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary block">
+                      Arah & Tujuan
+                    </span>
+                    <h3 className="font-heading font-bold text-lg text-foreground">
+                      Visi Kelurahan Palmeriam
+                    </h3>
+                  </div>
+                </div>
+                <blockquote className="border-l-4 border-primary pl-4 py-1.5 text-sm sm:text-base text-slate-800 font-medium leading-relaxed italic whitespace-pre-line break-words bg-slate-50/50 rounded-r-lg">
+                  &ldquo;{profil?.visi || "Mewujudkan Kelurahan Palmeriam yang modern, transparan, dan melayani"}&rdquo;
+                </blockquote>
               </div>
-              <div className="card-government p-6 text-center mt-8">
-                <Heart className="w-10 h-10 text-accent mx-auto mb-3" />
-                <h3 className="font-heading font-semibold text-foreground mb-2">Misi</h3>
-                <p className="text-sm text-muted-foreground">
-                  Meningkatkan kualitas pelayanan publik berbasis teknologi
-                </p>
-              </div>
-              <div className="card-government p-6 text-center">
-                <Users className="w-10 h-10 text-primary mx-auto mb-3" />
-                <h3 className="font-heading font-semibold text-foreground mb-2">Partisipatif</h3>
-                <p className="text-sm text-muted-foreground">
-                  Mendorong partisipasi aktif masyarakat dalam pembangunan
-                </p>
-              </div>
-              <div className="card-government p-6 text-center mt-8">
-                <Award className="w-10 h-10 text-accent mx-auto mb-3" />
-                <h3 className="font-heading font-semibold text-foreground mb-2">Integritas</h3>
-                <p className="text-sm text-muted-foreground">
-                  Menjunjung tinggi kejujuran dan profesionalisme
-                </p>
+
+              {/* Card Misi */}
+              <div className="card-government p-6 sm:p-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col h-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center text-accent shrink-0">
+                    <Heart className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-accent block">
+                      Langkah Strategis
+                    </span>
+                    <h3 className="font-heading font-bold text-lg text-foreground">
+                      Misi Kelurahan Palmeriam
+                    </h3>
+                  </div>
+                </div>
+
+                {misiLines.length > 1 ? (
+                  <div className="space-y-3 pt-1">
+                    {misiLines.map((line, idx) => (
+                      <div key={idx} className="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/15 text-accent font-bold text-xs flex items-center justify-center mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <p className="flex-1 whitespace-pre-line break-words text-slate-800">
+                          {line.replace(/^\d+[\.\)]\s*/, "")}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line break-words">
+                    {misiText}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -299,23 +413,38 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((member, index) => (
-              <div key={index} className="card-government text-center group">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-light mx-auto mb-4 flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Users className="w-10 h-10 text-primary-foreground" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {organisasiList.map((member) => (
+              <div
+                key={member.id}
+                className="card-government text-center group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center p-6 bg-white rounded-2xl border border-slate-200/80"
+              >
+                {/* Classic Round Avatar Photo (Balanced Size) */}
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full mx-auto mb-4 overflow-hidden relative border-4 border-white shadow-md ring-2 ring-slate-200/70 bg-gradient-to-br from-primary to-primary-light flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shrink-0">
+                  {member.foto ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.foto}
+                      alt={member.nama}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <Users className="w-12 h-12 text-white/90" />
+                  )}
                 </div>
-                {member.name && (
-                  <h3 className="font-heading font-semibold text-foreground mb-1">
-                    {member.name}
-                  </h3>
+
+                <h3 className="font-heading font-bold text-foreground text-base sm:text-lg mb-1 leading-snug">
+                  {member.nama}
+                </h3>
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2 px-3 py-1 bg-accent/10 rounded-full inline-block">
+                  {member.jabatan}
+                </p>
+                {member.deskripsi && (
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 mt-1">
+                    {member.deskripsi}
+                  </p>
                 )}
-                <p className="text-sm font-medium text-accent mb-2">
-                  {member.role}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {member.description}
-                </p>
               </div>
             ))}
           </div>

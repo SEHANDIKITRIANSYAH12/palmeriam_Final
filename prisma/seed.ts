@@ -216,6 +216,74 @@ Kami mengundang seluruh warga Palmeriam, Jakarta Timur untuk hadir dan meramaika
   }
   console.log(`✅ Created ${agendaData.length} agenda`);
 
+  // 4. Seed Struktur Organisasi
+  console.log("\n👥 Seeding Struktur Organisasi...");
+  const orgCount = await prisma.strukturOrganisasi.count();
+  if (orgCount === 0) {
+    const orgData = [
+      {
+        nama: "Setiyawan, S.Pd., M.Si.",
+        jabatan: "Lurah Palmeriam",
+        deskripsi: "Memimpin dan mengoordinasikan seluruh penyelenggaraan pemerintahan dan pelayanan di kelurahan.",
+        foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&q=80",
+        urutan: 1,
+        isAktif: true,
+      },
+      {
+        nama: "Dra. Hj. Nurhayati, M.M.",
+        jabatan: "Sekretaris Kelurahan",
+        deskripsi: "Mengelola administrasi umum, keuangan, kepegawaian, dan tata usaha kelurahan.",
+        foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&q=80",
+        urutan: 2,
+        isAktif: true,
+      },
+      {
+        nama: "Bambang Sudiro, S.Sos.",
+        jabatan: "Kepala Seksi Pemerintahan",
+        deskripsi: "Menangani urusan ketertiban umum, administrasi kependudukan, dan hubungan antar-lembaga RT/RW.",
+        foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&q=80",
+        urutan: 3,
+        isAktif: true,
+      },
+      {
+        nama: "Siti Rahmawati, S.E.",
+        jabatan: "Kepala Seksi Kesejahteraan Rakyat",
+        deskripsi: "Mengelola program kesejahteraan sosial, kesehatan masyarakat, posyandu, dan bantuan sosial.",
+        foto: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&q=80",
+        urutan: 4,
+        isAktif: true,
+      },
+      {
+        nama: "Ahmad Fauzi, S.T.",
+        jabatan: "Kepala Seksi Ekonomi dan Pembangunan",
+        deskripsi: "Mengawal pembangunan sarana prasarana, kebersihan lingkungan, dan pemberdayaan UMKM.",
+        foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&q=80",
+        urutan: 5,
+        isAktif: true,
+      },
+    ];
+    for (const org of orgData) {
+      await prisma.strukturOrganisasi.create({ data: org });
+    }
+    console.log(`✅ Created ${orgData.length} struktur organisasi`);
+  }
+
+  // 5. Seed Profil & Visi Misi
+  console.log("\n🏛️ Seeding Profil & Visi Misi...");
+  const profilCount = await prisma.profilKelurahan.count();
+  if (profilCount === 0) {
+    await prisma.profilKelurahan.create({
+      data: {
+        id: 1,
+        tentang: "Kelurahan Palmeriam merupakan salah satu kelurahan di Kecamatan Matraman, Kota Administrasi Jakarta Timur, DKI Jakarta. Kami berkomitmen untuk memberikan pelayanan publik yang prima, transparan, akuntabel, dan berbasis teknologi melalui platform SIPALMI.",
+        visi: "Mewujudkan Kelurahan Palmeriam yang Modern, Harmonis, Partisipatif, dan Unggul dalam Pelayanan Publik Digital.",
+        misi: "1. Meningkatkan kualitas dan kemudahan pelayanan administrasi kependudukan secara cepat dan transparan.\n2. Mendorong partisipasi aktif warga dalam pembangunan lingkungan, gotong royong, dan ketertiban umum.\n3. Mengembangkan pemanfaatan teknologi digital terpadu untuk pelayanan dan pengaduan masyarakat 24 jam.\n4. Memperkuat jaring pengaman sosial, pemberdayaan ekonomi warga, serta kesehatan keluarga.",
+        poinPelayanan: "Pelayanan cepat dan transparan\nSistem pengaduan 24 jam\nAkses informasi publik real-time\nRamah lansia dan disabilitas",
+      },
+    });
+    console.log("✅ Created initial profil kelurahan & visi misi");
+  }
+
   console.log("\n✨ Seed completed successfully!");
   console.log(`📊 Summary:`);
   console.log(`   - Berita: ${beritaData.length} items`);
